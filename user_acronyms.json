@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "exportDate": "2025-08-08T19:25:56.253Z",
+    "count": 28,
+    "version": "2.0"
+  },
+  "acronyms": [
+    {
+      "acronym": "za",
+      "meaning": "user address"
+    },
+    {
+      "acronym": "zb",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zc",
+      "meaning": "user car"
+    },
+    {
+      "acronym": "zd",
+      "meaning": "user drugstore"
+    },
+    {
+      "acronym": "ze",
+      "meaning": "user email address"
+    },
+    {
+      "acronym": "zf",
+      "meaning": "user first name"
+    },
+    {
+      "acronym": "zg",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zh",
+      "meaning": "user hobbies"
+    },
+    {
+      "acronym": "zi",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zj",
+      "meaning": "user job"
+    },
+    {
+      "acronym": "zk",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zl",
+      "meaning": "user last name"
+    },
+    {
+      "acronym": "zm",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zn",
+      "meaning": "user full name"
+    },
+    {
+      "acronym": "zo",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zp",
+      "meaning": "user prescriptions"
+    },
+    {
+      "acronym": "zq",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zr",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zs",
+      "meaning": "user schooling"
+    },
+    {
+      "acronym": "zt",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zu",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zv",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zw",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zx",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zy",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "zz",
+      "meaning": "reserved for user use"
+    },
+    {
+      "acronym": "ERIC",
+      "meaning": "ericro"
+    },
+    {
+      "acronym": "LINDA",
+      "meaning": "linda"
+    }
+  ]
+}

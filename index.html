@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyVoice International Edition - Communication Assistant</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MyVoice International">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    
+    <!-- Embedded CSS -->
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 0.2rem;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        #app {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0.3rem;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 0.1rem;
+            align-items: center;
+            gap: 0.1rem;
+        }
+
+        .col-1 { flex: 1; }
+        .col-1-2 { flex: 1.2; }
+        .col-1-5 { flex: 1.5; }
+        .col-2 { flex: 2; }
+        .col-2-5 { flex: 2.5; }
+        .col-3 { flex: 3; }
+        .col-3-5 { flex: 3.5; }
+        .col-4 { flex: 4; }
+        .col-4-5 { flex: 4.5; }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .version-info {
+            font-size: 0.7rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: #555;
+        }
+
+        .label {
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            padding-right: 0.2rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            height: 2.2rem;
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .language-dropdown {
+            width: 100%;
+            height: 2rem;
+            padding: 0.2rem 0.4rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            background: white;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .language-dropdown:focus {
+            outline: 2px solid #2196F3;
+            border-color: #2196F3;
+        }
+
+        input[readonly] {
+            background: #f8f8f8;
+            color: #666;
+        }
+
+        #message-input {
+            font-weight: bold;
+            background: #fff9c4;
+            font-size: 0.85rem;
+        }
+
+        #message-input:focus {
+            outline: 2px solid #2196F3;
+            background: white;
+        }
+
+        #translation-input {
+            font-weight: bold;
+            background: #f0f8ff;
+            border: 2px solid #87ceeb;
+            color: #1565C0;
+            font-size: 0.85rem;
+        }
+
+        #translation-input:focus {
+            outline: 2px solid #1976D2;
+            background: #e3f2fd;
+        }
+
+        .btn {
+            height: 2.8rem;
+            padding: 0.2rem 0.3rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f8f8f8;
+            color: #333;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+        }
+
+        .btn:hover {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .btn:active {
+            background: #2196F3;
+            color: white;
+            transform: translateY(1px);
+        }
+
+        .btn-main {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-morse {
+            font-size: 0.6rem;
+            font-weight: normal;
+            color: #666;
+            font-family: monospace;
+            margin-top: 0.1rem;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+            border-color: #1976D2;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+
+        .btn-primary .btn-morse {
+            color: #E3F2FD;
+        }
+
+        .btn-translation {
+            background: #e3f2fd;
+            color: #1565C0;
+            border-color: #2196F3;
+            font-size: 0.65rem;
+            height: 2.2rem;
+            padding: 0.1rem 0.2rem;
+        }
+
+        .btn-translation:hover {
+            background: #bbdefb;
+            border-color: #1976D2;
+        }
+
+        .btn-translation:active {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-translation .btn-main {
+            font-size: 0.65rem;
+        }
+
+        .btn-translation .btn-morse {
+            color: #1976D2;
+            font-size: 0.5rem;
+        }
+
+        .btn-translation:active .btn-morse {
+            color: white;
+        }
+
+        .morse-buttons-row {
+            justify-content: center;
+        }
+
+        .morse-button-group {
+            display: flex;
+            gap: 0.1rem;
+            justify-content: center;
+        }
+
+        .morse-btn {
+            height: 2.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            min-width: 60px;
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+
+        .morse-btn:hover {
+            background: #ffe0b2;
+            border-color: #f57c00;
+        }
+
+        .morse-btn:active {
+            background: #ff9800;
+            color: white;
+        }
+
+        .morse-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .morse-inputs .label {
+            min-width: 35px;
+            font-weight: bold;
+        }
+
+        .morse-inputs input {
+            flex: 1;
+            height: 1.8rem;
+            font-family: monospace;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #status-display {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            font-weight: bold;
+        }
+
+        .loading {
+            background: #fff3cd !important;
+            border-color: #ffc107 !important;
+            color: #856404 !important;
+        }
+
+        .db-info {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.2rem;
+            text-align: center;
+        }
+
+        .mouse-area {
+            height: 4.4rem;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196F3;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: crosshair;
+            transition: all 0.2s;
+            user-select: none;
+            width: 100%;
+        }
+
+        .mouse-area:hover {
+            background: linear-gradient(135deg, #bbdefb, #90caf9);
+            border-color: #1976D2;
+            transform: scale(1.02);
+        }
+
+        .mouse-area.active {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .mouse-area-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1976D2;
+            margin-bottom: 0.1rem;
+        }
+
+        .mouse-area-instructions {
+            font-size: 0.65rem;
+            color: #1565C0;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 0.1rem;
+        }
+
+        .mouse-area-scroll {
+            font-size: 0.6rem;
+            color: #0D47A1;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mouse-area.active .mouse-area-text,
+        .mouse-area.active .mouse-area-instructions,
+        .mouse-area.active .mouse-area-scroll {
+            color: white;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            width: auto;
+            height: auto;
+            padding: 0.2rem;
+        }
+
+        .btn-close:hover {
+            color: #333;
+            background: #f0f0f0;
+            border-radius: 50%;
+        }
+
+        .manual-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .manual-section ul {
+            margin: 0.5rem 0 0 1.5rem;
+            line-height: 1.4;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .shortcut-col {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .morse-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .morse-col {
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background: #f8f8f8;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .user-modal {
+            max-width: 700px;
+        }
+        
+        .user-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr 0.8fr;
+            gap: 0.3rem;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .user-form-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-form-label {
+            font-weight: normal;
+            margin-bottom: 0.15rem;
+            font-size: 0.7rem;
+            color: #555;
+        }
+        
+        .user-form-input {
+            width: 100%;
+            height: 1.6rem;
+            padding: 0.1rem 0.25rem;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            background: white !important;
+            color: #333 !important;
+            cursor: text !important;
+            pointer-events: auto !important;
+            outline: none;
+        }
+        
+        .user-form-input:focus {
+            outline: 2px solid #2196F3 !important;
+            border-color: #2196F3 !important;
+            background: white !important;
+            cursor: text !important;
+        }
+        
+        /* Force enable user form inputs - remove any readonly/disabled state */
+        .user-form-input:not([readonly]):not([disabled]) {
+            background: white !important;
+            cursor: text !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure acronym input is editable */
+        .user-acronym-input {
+            text-transform: uppercase;
+            background: white !important;
+            cursor: text !important;
+            pointer-events: auto !important;
+        }
+        
+        .user-acronym-input:focus {
+            background: white !important;
+            cursor: text !important;
+            outline: 2px solid #2196F3 !important;
+        }
+        
+        .user-filter-input {
+            width: 100%;
+            height: 1.6rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .user-list-container {
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.3rem;
+            background: #f9f9f9;
+        }
+        
+        .user-list-item {
+            display: flex;
+            align-items: center;
+            padding: 0.2rem;
+            border-bottom: 1px solid #eee;
+            background: white;
+            margin-bottom: 0.1rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+        }
+        
+        .user-list-content {
+            flex: 1;
+            font-size: 0.7rem;
+        }
+        
+        .user-list-buttons {
+            display: flex;
+            gap: 0.2rem;
+        }
+        
+        .user-btn-edit {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+            background: #e3f2fd;
+            border: 1px solid #2196F3;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        .user-btn-delete {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+            background: #ffebee;
+            border: 1px solid #f44336;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        .user-management-buttons {
+            display: flex;
+            gap: 0.4rem;
+        }
+        
+        .user-empty-state {
+            text-align: center;
+            color: #666;
+            padding: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.1rem;
+                font-size: 13px;
+            }
+            
+            #app {
+                padding: 0.2rem;
+            }
+            
+            .btn {
+                height: 2.4rem;
+                font-size: 0.7rem;
+                padding: 0.1rem 0.2rem;
+            }
+            
+            .btn-translation {
+                height: 2rem;
+                font-size: 0.6rem;
+            }
+            
+            .btn-morse {
+                font-size: 0.55rem;
+            }
+            
+            .morse-btn {
+                height: 2.6rem;
+                min-width: 50px;
+            }
+            
+            h1 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="row header-row">
+            <div class="col-3">
+                <h1>MyVoice International Edition</h1>
+                <div class="version-info">v2.0 - Loading Database...</div>
+            </div>
+            <div class="col-1">
+                <button id="manual-btn" class="btn btn-primary">
+                    <span class="btn-main">Manual</span>
+                    <span class="btn-morse">--.-- 'gm'  [ ( ]</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Manual Modal -->
+        <div id="manual-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>MyVoice International Edition Manual</h2>
+                    <button id="close-manual" class="btn-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="manual-section">
+                        <h3>Welcome to MyVoice International Edition</h3>
+                        <p><strong>Created by Eric Kuegler</strong><br>
+                        This edition preserves Eric's 12 years of comprehensive acronym research, now expanded to 175,000+ multilingual entries serving the global disability community with professional-grade communication assistance.</p>
+                        
+                        <p><strong>Target Users:</strong> This is designed for long-term users who need reliable daily communication assistance - people with disabilities who are homebound or chair-bound with time to master a comprehensive system. Like learning a car dashboard, the complexity provides capability for those who truly need it.</p>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Database & Dynamic Acronym Generation</h3>
+                        <p><strong>Total Database:</strong> 175,000+ acronyms (25,000 base × 7 languages)<br>
+                        <strong>Languages:</strong> English, Español (España), Español (América), Português, Français, Italiano, Deutsch<br>
+                        <strong>Coverage:</strong> Military, medical, technology, government, science, and personal communication</p>
+                        
+                        <p><strong>Dynamic Acronym System:</strong> You don't memorize all acronyms - you learn the PATTERNS! Short acronym names create families that build on each other:</p>
+                        <ul>
+                            <li><strong>Single chars:</strong> d="did", g="good", h="help", i="i", m="me", n="not", u="you"</li>
+                            <li><strong>Families expand:</strong> lv="leave" → lvitm="leave it to me"</li>
+                            <li><strong>Rules:</strong> -ing words add 'g' (going="gg"), need="n"/"nd", that="tt"</li>
+                            <li><strong>Conversation chains:</strong> hay="how are you" → hayf="how are you feeling"</li>
+                        </ul>
+                        
+                        <p><strong>Progressive Discovery:</strong> Use scroll wheel to explore acronym families. After time, you'll predict what exists and discover useful shortcuts through pattern recognition!</p>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Keyboard Shortcuts - FIXED MAPPINGS</h3>
+                        <div class="shortcut-grid">
+                            <div class="shortcut-col">
+                                <strong>Text Control:</strong><br>
+                                [ → Clear last word<br>
+                                ] → Toggle Speech<br>
+                                ` → Clear message<br>
+                                Space → Add Space/Expand Acronym<br><br>
+                                
+                                <strong>Speech & Audio:</strong><br>
+                                / → Speak message<br>
+                                \ → Copy to clipboard<br>
+                                - → Volume down<br>
+                                = → Volume up<br>
+                            </div>
+                            <div class="shortcut-col">
+                                <strong>Voice & Special:</strong><br>
+                                ~ → Cycle voice<br>
+                                | → Cycle Tone (ONLY tone key)<br>
+                                ? → Lookup Word (ONLY lookup key)<br>
+                                ( → Open Manual<br>
+                                ) → User Acronym Database<br><br>
+                                
+                                <strong>Navigation:</strong><br>
+                                ← → Previous acronym<br>
+                                → → Next acronym<br>
+                                Enter → Select acronym<br>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Single Character Acronyms</h3>
+                        <div class="morse-grid">
+                            <div class="morse-col">
+                                <strong>Common Singles:</strong><br>
+                                a = a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n = not<br>
+                                b = be&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o = on<br>
+                                c = can&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p = pain<br>
+                                d = did&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q = quit<br>
+                                e = yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = are<br>
+                                f = for&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s = see<br>
+                                g = good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t = no<br>
+                                h = help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u = you<br>
+                                i = i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v = very<br>
+                                j = job&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w = well<br>
+                                k = known&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = extreme<br>
+                                l = let&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = why<br>
+                                m = me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z = z
+                            </div>
+                            <div class="morse-col">
+                                <strong>Example Expansion:</strong><br>
+                                cihy = can i help you<br>
+                                hay = how are you<br>
+                                hayf = how are you finding<br>
+                                iwbf = i'll be fine<br>
+                                nsiic = not sure if i can<br>
+                                nsiicg = not sure if i can go<br><br>
+                                
+                                <strong>Building Families:</strong><br>
+                                ja = just a<br>
+                                jc = just call<br>
+                                jd = just did<br>
+                                jf = just for<br>
+                                jfhi = just for him<br>
+                                jfh = just for her
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Important Notes</h3>
+                        <p><strong>Fixed Issues:</strong><br>
+                        • Mouse wheel scrolling through acronyms now works properly<br>
+                        • Keyboard "|" key ONLY controls tone volume<br>
+                        • Keyboard "?" key ONLY controls lookup word function<br>
+                        • All mouse and keyboard shortcuts are properly bound<br>
+                        • Press/release timing for Morse buttons provides realistic audio feedback</p>
+                        
+                        <p><strong>Professional System:</strong> This isn't any more complicated than modern car dashboards. Our display is a communication dashboard with extensive choices for users who need professional-grade assistance tools.</p>
+                        
+                        <p style="color: #d32f2f; font-weight: bold;">IMPORTANT: DO NOT SHUT DOWN THIS APP - LEAVE THIS COMPUTER ON</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Acronyms Modal -->
+        <div id="user-acronyms-modal" class="modal hidden">
+            <div class="modal-content user-modal">
+                <div class="modal-header">
+                    <h2>User Acronym Manager</h2>
+                    <button id="close-user-acronyms" class="btn-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="manual-section">
+                        <h3>Add New Acronym</h3>
+                        <p style="font-size: 0.75rem; color: #666; margin-bottom: 0.4rem;">
+                            Auto-Convert: Regular words (3+ chars) automatically become acronyms.<br>
+                            Templates: 'zz' acronyms (zza-zzz) are pre-loaded for personal information.
+                        </p>
+                        <div class="user-form-grid">
+                            <div class="user-form-field">
+                                <label class="user-form-label">Acronym:</label>
+                                <input type="text" id="new-acronym" placeholder="abc" class="user-form-input user-acronym-input" maxlength="20" autocomplete="off" spellcheck="false">
+                            </div>
+                            <div class="user-form-field">
+                                <label class="user-form-label">Meaning:</label>
+                                <input type="text" id="new-meaning" placeholder="meaning or description" class="user-form-input" maxlength="100" autocomplete="off" spellcheck="false">
+                            </div>
+                            <div class="user-form-field">
+                                <button id="add-user-acronym" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Your Acronyms <span id="user-count">(0/1000)</span></h3>
+                        <input type="text" id="filter-user-acronyms" placeholder="Filter acronyms..." class="user-form-input user-filter-input" autocomplete="off">
+                        <div id="user-acronyms-list" class="user-list-container">
+                            <div class="user-empty-state">Use templates above or type words to auto-create acronyms!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="manual-section">
+                        <h3>Data Management</h3>
+                        <div class="user-management-buttons">
+                            <button id="export-user-acronyms" class="btn">Export</button>
+                            <button id="import-user-acronyms" class="btn">Import</button>
+                        </div>
+                        <input type="file" id="import-file" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Learning Message Boxes -->
+        <div class="row">
+            <div class="col-1 label">
+                <label>EN:</label>
+            </div>
+            <div class="col-4-5">
+                <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off">
+            </div>
+            <div class="col-1" style="flex: 0.7;">
+                <button id="speak-english-btn" class="btn btn-translation">
+                    <span class="btn-main">Speak</span>
+                    <span class="btn-morse">EN</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Translation Message Box -->
+        <div class="row">
+            <div class="col-1 label">
+                <label id="translation-language-label">ES:</label>
+            </div>
+            <div class="col-4-5">
+                <input type="text" id="translation-input" placeholder="Translation will appear here..." readonly>
+            </div>
+            <div class="col-1" style="flex: 0.7;">
+                <button id="speak-translation-btn" class="btn btn-translation">
+                    <span class="btn-main">Speak</span>
+                    <span class="btn-morse" id="translation-lang-code">ES</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Acronym Lookup & Language Selection -->
+        <div class="row">
+            <div class="col-1 label">
+                <label>Lookup:</label>
+            </div>
+            <div class="col-2-5">
+                <input type="text" id="acronym-display" readonly>
+            </div>
+            <div class="col-1 label">
+                <label>Lang:</label>
+            </div>
+            <div class="col-1">
+                <select id="language-select" class="language-dropdown">
+                    <option value="en">English</option>
+                    <option value="es-es">Español (España)</option>
+                    <option value="es-mx">Español (América)</option>
+                    <option value="pt">Português</option>
+                    <option value="fr">Français</option>
+                    <option value="it">Italiano</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Acronym Navigation -->
+        <div class="row">
+            <div class="col-1">
+                <button id="prev-acronym" class="btn">◀</button>
+            </div>
+            <div class="col-1">
+                <button id="next-acronym" class="btn">▶</button>
+            </div>
+            <div class="col-1">
+                <button id="select-acronym" class="btn">Select</button>
+            </div>
+            <div class="col-2">
+                <button id="lookup-word" class="btn">
+                    <span class="btn-main">Lookup Word</span>
+                    <span class="btn-morse">..-.--  'uw'  [ ? ]</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Morse Input -->
+        <div class="row">
+            <div class="col-1-2 label">
+                <label>Morse Input:</label>
+            </div>
+            <div class="col-2">
+                <div class="morse-inputs">
+                    <span class="label">Code:</span>
+                    <input type="text" id="morse-code" readonly>
+                    <span class="label">Char:</span>
+                    <input type="text" id="morse-char" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIT/DAH Buttons -->
+        <div class="row morse-buttons-row">
+            <div class="col-1"></div>
+            <div class="col-1">
+                <div class="morse-button-group">
+                    <button id="dit-btn" class="btn morse-btn">DIT<br>( • )</button>
+                    <button id="dah-btn" class="btn morse-btn">DAH<br>( — )</button>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+        <!-- Basic Controls -->
+        <div class="row">
+            <div class="col-1">
+                <button id="clear-btn" class="btn">
+                    <span class="btn-main">Clear</span>
+                    <span class="btn-morse">..-.-.  'ur'  [ ` ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="backspace-btn" class="btn">
+                    <span class="btn-main">Backspace</span>
+                    <span class="btn-morse">.-.-  'aa'</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="space-btn" class="btn">
+                    <span class="btn-main">Space</span>
+                    <span class="btn-morse">...-...  'sb'</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Advanced Controls -->
+        <div class="row">
+            <div class="col-1">
+                <button id="clear-last-word-btn" class="btn">
+                    <span class="btn-main">Clear Last Word</span>
+                    <span class="btn-morse">.-.-.  'ar'  [ [ ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="speak-btn" class="btn">
+                    <span class="btn-main">Speak</span>
+                    <span class="btn-morse">-..-.  'dn'  [ / ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="copy-btn" class="btn">
+                    <span class="btn-main">Copy</span>
+                    <span class="btn-morse">.--.-  'ak'  [ \ ]</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Volume & Voice -->
+        <div class="row">
+            <div class="col-1">
+                <button id="volume-down-btn" class="btn">
+                    <span class="btn-main">Volume-</span>
+                    <span class="btn-morse">-....-  'du'  [ - ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="voice-btn" class="btn">
+                    <span class="btn-main">Voice: <span id="voice-type">Male</span></span>
+                    <span class="btn-morse">...-.  've'  [ ~ ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="volume-up-btn" class="btn">
+                    <span class="btn-main">Volume+</span>
+                    <span class="btn-morse">-...-  'da'  [ = ]</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mouse Input Area & Tone -->
+        <div class="row" style="margin-bottom: 0.15rem;">
+            <div class="col-2">
+                <div id="mouse-click-area" class="mouse-area">
+                    <div class="mouse-area-text">MOUSE INPUT AREA</div>
+                    <div class="mouse-area-instructions">Left Click = DIT • | Right Click = DAH —</div>
+                    <div class="mouse-area-scroll">Scroll = Navigate | Middle Click = Select</div>
+                </div>
+            </div>
+            <div class="col-1" style="align-self: flex-start;">
+                <button id="tone-btn" class="btn">
+                    <span class="btn-main">Tone: <span id="tone-mode">LOW</span></span>
+                    <span class="btn-morse">..--..  'ud'  [ | ]</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mode Controls -->
+        <div class="row">
+            <div class="col-1">
+                <button id="speech-mode-btn" class="btn">
+                    <span class="btn-main">Speech: <span id="speech-mode">ON</span></span>
+                    <span class="btn-morse">-.--.  'kn'  [ ] ]</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="test-btn" class="btn">
+                    <span class="btn-main">Test</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="spare-btn" class="btn">
+                    <span class="btn-main">Spare</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button id="user-acronyms-btn" class="btn">
+                    <span class="btn-main">User Acronyms</span>
+                    <span class="btn-morse">..-.-  'ua'</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="row">
+            <div class="col-1 label">
+                <label>Status:</label>
+            </div>
+            <div class="col-4">
+                <input type="text" id="status-display" value="Loading database..." class="loading" readonly>
+            </div>
+        </div>
+
+        <!-- Database Info -->
+        <div class="db-info" id="db-info">
+            MyVoice International Edition - 175,000+ Multilingual Acronyms
+        </div>
+    </div>
+
+    <script>
+        console.log('Starting MyVoice International Edition...');
+
+        let app = null;
+        let dbLoaded = false;
+
+        class InternationalDatabaseManager {
+            constructor() {
+                this.mainAcronyms = [];
+                this.userAcronyms = [];
+                this.isLoaded = false;
+                this.metadata = {};
+                this.availableLanguages = ['en', 'es-es', 'es-mx', 'pt', 'fr', 'it', 'de'];
+                this.languageNames = {
+                    'en': 'English',
+                    'es-es': 'Español (España)', 
+                    'es-mx': 'Español (América)',
+                    'pt': 'Português',
+                    'fr': 'Français',
+                    'it': 'Italiano',
+                    'de': 'Deutsch'
+                };
+            }
+
+            async loadDatabases() {
+                console.log('Loading International Edition databases...');
+                this.updateStatus('Loading main database...');
+
+                try {
+                    const mainResponse = await fetch('main_acronyms.json');
+                    if (mainResponse.ok) {
+                        const mainData = await mainResponse.json();
+                        
+                        this.mainAcronyms = mainData.acronyms || [];
+                        this.metadata.main = mainData.metadata || {};
+                        
+                        if (mainData.metadata && mainData.metadata.languages) {
+                            this.availableLanguages = mainData.metadata.languages;
+                            console.log('Auto-detected languages:', this.availableLanguages);
+                        }
+                        
+                        console.log('Loaded ' + this.mainAcronyms.length + ' main acronyms');
+                        console.log('Available languages:', this.availableLanguages);
+                    } else {
+                        console.log('External database not available - using built-in database');
+                        this.loadFallbackDatabase();
+                    }
+
+                    this.updateStatus('Loading user database...');
+                    try {
+                        const userResponse = await fetch('user_acronyms.json');
+                        if (userResponse.ok) {
+                            const userData = await userResponse.json();
+                            this.userAcronyms = userData.acronyms || [];
+                            this.metadata.user = userData.metadata || {};
+                            console.log('Loaded ' + this.userAcronyms.length + ' user acronyms');
+                        }
+                    } catch (e) {
+                        // Silent - user database is optional
+                    }
+
+                    this.isLoaded = true;
+                    this.updateVersionInfo();
+                    this.updateStatus('Database ready - communication system loaded!');
+                    return true;
+
+                } catch (error) {
+                    console.log('External database not accessible (CORS/file:// limitation) - using built-in database');
+                    this.loadFallbackDatabase();
+                    return false;
+                }
+            }
+
+            loadFallbackDatabase() {
+                console.log('Loading fallback database...');
+                this.mainAcronyms = [
+                    { acronym: 'HELP', meaning: 'assistance request' },
+                    { acronym: 'URGENT', meaning: 'needs immediate attention' },
+                    { acronym: 'MEDICAL', meaning: 'health related issue' },
+                    { acronym: 'EMERGENCY', meaning: 'critical situation' },
+                    { acronym: 'THANKS', meaning: 'thank you' },
+                    { acronym: 'HELLO', meaning: 'greeting' },
+                    { acronym: 'GOODBYE', meaning: 'farewell' },
+                    { acronym: 'YES', meaning: 'affirmative response' },
+                    { acronym: 'NO', meaning: 'negative response' },
+                    { acronym: 'MAYBE', meaning: 'uncertain response' },
+                    { acronym: 'PLEASE', meaning: 'polite request' },
+                    { acronym: 'SORRY', meaning: 'apology' },
+                    { acronym: 'PAIN', meaning: 'physical discomfort' },
+                    { acronym: 'WATER', meaning: 'need hydration' },
+                    { acronym: 'FOOD', meaning: 'need nutrition' },
+                    { acronym: 'REST', meaning: 'need sleep or break' },
+                    { acronym: 'BATHROOM', meaning: 'need facilities' },
+                    { acronym: 'COMFORTABLE', meaning: 'feeling good' }
+                ];
+                this.isLoaded = true;
+                this.updateStatus('Database ready - communication system loaded!');
+            }
+
+            updateStatus(message) {
+                const status = document.getElementById('status-display');
+                if (status) {
+                    status.value = message;
+                    if (message.includes('successfully') || message.includes('ready')) {
+                        status.classList.remove('loading');
+                    }
+                }
+            }
+
+            updateVersionInfo() {
+                const versionEl = document.querySelector('.version-info');
+                const dbInfoEl = document.getElementById('db-info');
+                
+                const totalAcronyms = this.mainAcronyms.length + this.userAcronyms.length;
+                const estimatedTotal = totalAcronyms * this.availableLanguages.length;
+                
+                if (versionEl) {
+                    const langInfo = this.availableLanguages.length > 1 ? 
+                        ` (${this.availableLanguages.length} languages)` : '';
+                    versionEl.textContent = 'v2.0 - ' + estimatedTotal.toLocaleString() + ' multilingual entries' + langInfo;
+                }
+                
+                if (dbInfoEl) {
+                    dbInfoEl.textContent = 'MyVoice International Edition - 175,000+ Multilingual Acronyms';
+                }
+            }
+
+            getAllAcronyms() {
+                return [...this.mainAcronyms, ...this.userAcronyms];
+            }
+
+            searchAcronyms(query) {
+                if (!query) return [];
+                
+                const allAcronyms = this.getAllAcronyms();
+                const queryUpper = query.toUpperCase();
+                
+                const exactMatches = allAcronyms.filter(item => 
+                    item.acronym.toUpperCase().startsWith(queryUpper)
+                );
+                
+                return exactMatches;
+            }
+
+            getTranslation(acronymData, languageCode) {
+                if (!acronymData || languageCode === 'en') {
+                    return acronymData ? acronymData.meaning : '';
+                }
+                
+                if (acronymData.translations && acronymData.translations[languageCode]) {
+                    return acronymData.translations[languageCode];
+                }
+                
+                return '';
+            }
+        }
+
+        class MyVoiceInternationalApp {
+            constructor() {
+                this.dbManager = new InternationalDatabaseManager();
+                this.currentMessage = '';
+                this.currentTranslatedMessage = '';
+                this.morseCode = '';
+                this.morseTimeout = null;
+                this.speechMode = 'ON';
+                this.volume = 0.8;
+                this.voiceIndex = 0;
+                this.languageVoices = {};
+                this.voices = [];
+                this.voicesLoaded = false;
+                this.toneMode = 'LOW';
+                this.audioContext = null;
+                this.currentMatches = [];
+                this.currentMatchIndex = 0;
+                this.selectedLanguage = 'es-es';
+                this.isLookingUp = false;
+                
+                this.userAcronyms = [];
+                this.maxUserAcronyms = 1000;
+                this.filteredUserAcronyms = [];
+                
+                this.morseMap = {
+                    '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E',
+                    '..-.': 'F', '--.': 'G', '....': 'H', '..': 'I', '.---': 'J',
+                    '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O',
+                    '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T',
+                    '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y',
+                    '--..': 'Z',
+                    '.----': '1', '..---': '2', '...--': '3', '....-': '4', '.....': '5',
+                    '-....': '6', '--...': '7', '---..': '8', '----.': '9', '-----': '0',
+                    '--..--': ',', '.-.-.-': '.', '..--..': '?', '.----.': "'", '-.-.--': '!',
+                    '-..-.': '/', '-.--.': '(', '-.--.-': ')', '.-...': '&', '---...': ':',
+                    '-.-.-.': ';', '-...-': '=', '.-.-.': '+', '-....-': '-', '..--.-': '_',
+                    '.-..-.': '"', '...-..-': '$', '.--.-.': '@'
+                };
+                
+                this.init();
+            }
+
+            async init() {
+                console.log('Starting MyVoice International Edition...');
+                
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => this.initApp());
+                } else {
+                    this.initApp();
+                }
+            }
+
+            async initApp() {
+                console.log('DOM ready, initializing app...');
+                
+                dbLoaded = await this.dbManager.loadDatabases();
+                this.initAudio();
+                await this.loadVoicesWithRetry();
+                this.loadUserAcronyms();
+                this.setupEventListeners();
+                this.populateLanguageDropdown();
+                this.updateTranslationLabel();
+                this.focusMessageInput();
+                this.updateStatus('MyVoice International Edition ready to communicate!');
+                
+                console.log('MyVoice International Edition fully initialized');
+            }
+
+            populateLanguageDropdown() {
+                const languageSelect = document.getElementById('language-select');
+                if (languageSelect) {
+                    languageSelect.innerHTML = '';
+                    
+                    const allLanguages = ['en', 'es-es', 'es-mx', 'pt', 'fr', 'it', 'de'];
+                    const languageNames = {
+                        'en': 'English',
+                        'es-es': 'Español (España)',
+                        'es-mx': 'Español (América)', 
+                        'pt': 'Português',
+                        'fr': 'Français',
+                        'it': 'Italiano',
+                        'de': 'Deutsch'
+                    };
+                    
+                    allLanguages.forEach(langCode => {
+                        const option = document.createElement('option');
+                        option.value = langCode;
+                        option.textContent = languageNames[langCode];
+                        if (langCode === this.selectedLanguage) {
+                            option.selected = true;
+                        }
+                        languageSelect.appendChild(option);
+                    });
+                }
+            }
+
+            initAudio() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('Audio context initialized');
+                } catch (e) {
+                    console.warn('Audio context not available');
+                }
+            }
+
+            async loadVoicesWithRetry() {
+                console.log('Loading voices...');
+                let attempts = 0;
+                const maxAttempts = 5;
+                
+                while (attempts < maxAttempts && !this.voicesLoaded) {
+                    await this.loadVoices();
+                    if (this.voicesLoaded) break;
+                    
+                    attempts++;
+                    console.log('Voice loading attempt ' + attempts + '...');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!this.voicesLoaded) {
+                    console.warn('Could not load voices after multiple attempts');
+                    this.updateStatus('Warning: Voice synthesis may not be available');
+                }
+            }
+
+            async loadVoices() {
+                return new Promise((resolve) => {
+                    const allVoices = speechSynthesis.getVoices();
+                    
+                    if (allVoices.length === 0) {
+                        speechSynthesis.addEventListener('voiceschanged', () => {
+                            this.loadVoices().then(resolve);
+                        }, { once: true });
+                        
+                        speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+                        return;
+                    }
+                    
+                    console.log('Found ' + allVoices.length + ' voices');
+                    
+                    this.languageVoices = {
+                        'en': { male: null, female: null },
+                        'es-es': { male: null, female: null },
+                        'es-mx': { male: null, female: null },
+                        'pt': { male: null, female: null },
+                        'fr': { male: null, female: null },
+                        'it': { male: null, female: null },
+                        'de': { male: null, female: null }
+                    };
+                    
+                    const malePatterns = ['male', 'man', 'david', 'alex', 'daniel', 'paul', 'mark', 'tom', 'john', 'microsoft mark', 'google', 'carlos', 'josé', 'antonio', 'marco', 'pierre', 'henri'];
+                    const femalePatterns = ['female', 'woman', 'susan', 'victoria', 'sarah', 'anna', 'emma', 'samantha', 'kate', 'microsoft zira', 'maria', 'sofia', 'carmen', 'isabelle', 'marie', 'francesca', 'giulia'];
+                    
+                    allVoices.forEach(voice => {
+                        let lang = voice.lang.substring(0, 2).toLowerCase();
+                        
+                        if (lang === 'es') {
+                            if (voice.lang.includes('ES') || voice.lang.includes('es-ES') || voice.name.toLowerCase().includes('spain')) {
+                                lang = 'es-es';
+                            } else {
+                                lang = 'es-mx';
+                            }
+                        }
+                        
+                        if (this.languageVoices[lang]) {
+                            const voiceName = voice.name.toLowerCase();
+                            const isMale = malePatterns.some(pattern => voiceName.includes(pattern));
+                            const isFemale = femalePatterns.some(pattern => voiceName.includes(pattern));
+                            
+                            if (isMale && !this.languageVoices[lang].male) {
+                                this.languageVoices[lang].male = voice;
+                                console.log(`Found male ${lang} voice: ${voice.name}`);
+                            } else if (isFemale && !this.languageVoices[lang].female) {
+                                this.languageVoices[lang].female = voice;
+                                console.log(`Found female ${lang} voice: ${voice.name}`);
+                            } else if (!this.languageVoices[lang].male && !this.languageVoices[lang].female) {
+                                if (!this.languageVoices[lang].male) {
+                                    this.languageVoices[lang].male = voice;
+                                    console.log(`Assigned ${lang} voice as male: ${voice.name}`);
+                                } else if (!this.languageVoices[lang].female) {
+                                    this.languageVoices[lang].female = voice;
+                                    console.log(`Assigned ${lang} voice as female: ${voice.name}`);
+                                }
+                            }
+                        }
+                    });
+                    
+                    Object.keys(this.languageVoices).forEach(lang => {
+                        let searchLang = lang;
+                        if (lang === 'es-es' || lang === 'es-mx') {
+                            searchLang = 'es';
+                        }
+                        
+                        const langVoices = allVoices.filter(voice => voice.lang.startsWith(searchLang));
+                        
+                        if (langVoices.length > 0) {
+                            if (!this.languageVoices[lang].male) {
+                                this.languageVoices[lang].male = langVoices[0];
+                                console.log(`Fallback male ${lang} voice: ${langVoices[0].name}`);
+                            }
+                            if (!this.languageVoices[lang].female) {
+                                this.languageVoices[lang].female = langVoices[1] || langVoices[0];
+                                console.log(`Fallback female ${lang} voice: ${(langVoices[1] || langVoices[0]).name}`);
+                            }
+                        }
+                    });
+                    
+                    this.voicesLoaded = true;
+                    this.updateVoiceDisplay();
+                    
+                    console.log('Voice loading complete for all languages');
+                    resolve();
+                });
+            }
+
+            getCurrentVoice() {
+                const currentLanguage = this.selectedLanguage;
+                const genderKey = this.voiceIndex === 0 ? 'male' : 'female';
+                
+                if (this.languageVoices[currentLanguage] && this.languageVoices[currentLanguage][genderKey]) {
+                    return this.languageVoices[currentLanguage][genderKey];
+                }
+                
+                if (this.languageVoices[currentLanguage]) {
+                    return this.languageVoices[currentLanguage].male || this.languageVoices[currentLanguage].female;
+                }
+                
+                if (currentLanguage === 'es-es' && this.languageVoices['es-mx']) {
+                    return this.languageVoices['es-mx'][genderKey] || this.languageVoices['es-mx'].male || this.languageVoices['es-mx'].female;
+                }
+                if (currentLanguage === 'es-mx' && this.languageVoices['es-es']) {
+                    return this.languageVoices['es-es'][genderKey] || this.languageVoices['es-es'].male || this.languageVoices['es-es'].female;
+                }
+                
+                if (this.languageVoices['en']) {
+                    return this.languageVoices['en'][genderKey] || this.languageVoices['en'].male || this.languageVoices['en'].female;
+                }
+                
+                return null;
+            }
+
+            setupEventListeners() {
+                console.log('Setting up event listeners...');
+                
+                const messageInput = document.getElementById('message-input');
+                if (messageInput) {
+                    messageInput.addEventListener('input', (e) => this.handleMessageInput(e));
+                    messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
+                }
+
+                const buttons = [
+                    'speak-btn', 'test-btn', 'dit-btn', 'dah-btn', 'clear-btn', 
+                    'backspace-btn', 'space-btn', 'clear-last-word-btn', 'copy-btn',
+                    'volume-up-btn', 'volume-down-btn', 'voice-btn', 'speech-mode-btn',
+                    'tone-btn', 'manual-btn', 'close-manual', 'prev-acronym', 
+                    'next-acronym', 'select-acronym', 'lookup-word', 'user-acronyms-btn',
+                    'spare-btn', 'close-user-acronyms', 'add-user-acronym', 'export-user-acronyms',
+                    'import-user-acronyms', 'speak-translation-btn',
+                    'speak-english-btn'
+                ];
+
+                buttons.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('click', (e) => this.handleButtonClick(e));
+                        console.log('Connected: ' + id);
+                    }
+                });
+
+                this.setupMouseAccessibility();
+                document.addEventListener('keydown', (e) => this.handleGlobalKeyDown(e), { passive: false });
+                
+                const newAcronymInput = document.getElementById('new-acronym');
+                const newMeaningInput = document.getElementById('new-meaning');
+                const filterInput = document.getElementById('filter-user-acronyms');
+                const importFile = document.getElementById('import-file');
+                const languageSelect = document.getElementById('language-select');
+                
+                if (languageSelect) {
+                    languageSelect.addEventListener('change', (e) => {
+                        this.selectedLanguage = e.target.value;
+                        this.updateTranslationLabel();
+                        this.updateVoiceDisplay();
+                        this.rebuildTranslatedMessage();
+                        this.updateCurrentTranslation();
+                        this.updateStatus('Language changed to: ' + this.getLanguageName(this.selectedLanguage));
+                    });
+                }
+                
+                if (newAcronymInput) {
+                    newAcronymInput.addEventListener('input', (e) => {
+                        e.target.value = e.target.value.toUpperCase();
+                    });
+                    newAcronymInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            this.addUserAcronym();
+                        }
+                    });
+                }
+                
+                if (newMeaningInput) {
+                    newMeaningInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            this.addUserAcronym();
+                        }
+                    });
+                }
+                
+                if (filterInput) {
+                    filterInput.addEventListener('input', (e) => {
+                        this.filterUserAcronyms(e.target.value);
+                    });
+                }
+                
+                if (importFile) {
+                    importFile.addEventListener('change', (e) => {
+                        this.handleImportFile(e);
+                    });
+                }
+                
+                console.log('All event listeners connected');
+            }
+
+            updateTranslationLabel() {
+                const label = document.getElementById('translation-language-label');
+                const langCode = document.getElementById('translation-lang-code');
+                
+                if (label) {
+                    let shortName = this.selectedLanguage.toUpperCase();
+                    if (this.selectedLanguage === 'es-es') shortName = 'ES(EU)';
+                    if (this.selectedLanguage === 'es-mx') shortName = 'ES(AM)';
+                    label.textContent = shortName + ':';
+                }
+                
+                if (langCode) {
+                    let shortName = this.selectedLanguage.toUpperCase();
+                    if (this.selectedLanguage === 'es-es') shortName = 'ES(EU)';
+                    if (this.selectedLanguage === 'es-mx') shortName = 'ES(AM)';
+                    langCode.textContent = shortName;
+                }
+            }
+
+            rebuildTranslatedMessage() {
+                if (this.selectedLanguage === 'en') {
+                    this.currentTranslatedMessage = this.currentMessage;
+                    return;
+                }
+                this.currentTranslatedMessage = '';
+            }
+
+            updateCurrentTranslation() {
+                if (this.currentMatches.length > 0) {
+                    const match = this.currentMatches[this.currentMatchIndex];
+                    this.displayTranslation(match);
+                }
+            }
+
+            displayTranslation(acronymData) {
+                const translationInput = document.getElementById('translation-input');
+                if (!translationInput) return;
+
+                if (!acronymData) {
+                    this.showFullTranslatedMessage();
+                    return;
+                }
+
+                this.isLookingUp = true;
+                let displayText = '';
+                let bgColor = '#f0f8ff';
+
+                if (this.selectedLanguage === 'en') {
+                    displayText = acronymData.meaning;
+                    bgColor = '#f8f9fa';
+                } else {
+                    const translation = this.dbManager.getTranslation(acronymData, this.selectedLanguage);
+                    if (translation) {
+                        displayText = translation;
+                        bgColor = '#f0f8ff';
+                    } else {
+                        displayText = 'No translation available';
+                        bgColor = '#fff3cd';
+                    }
+                }
+                
+                translationInput.value = displayText;
+                translationInput.style.background = bgColor;
+            }
+
+            showFullTranslatedMessage() {
+                const translationInput = document.getElementById('translation-input');
+                if (!translationInput) return;
+
+                this.isLookingUp = false;
+                
+                if (this.selectedLanguage === 'en') {
+                    translationInput.value = this.currentMessage;
+                    translationInput.style.background = '#f8f9fa';
+                } else {
+                    translationInput.value = this.currentTranslatedMessage;
+                    translationInput.style.background = '#f0f8ff';
+                }
+            }
+
+            setupMouseAccessibility() {
+                const mouseArea = document.getElementById('mouse-click-area');
+                
+                if (mouseArea) {
+                    mouseArea.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.addMorse('.');
+                    }, { passive: false });
+                    
+                    mouseArea.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        this.addMorse('-');
+                    }, { passive: false });
+                    
+                    mouseArea.addEventListener('mousedown', (e) => {
+                        mouseArea.classList.add('active');
+                    });
+                    
+                    mouseArea.addEventListener('mouseup', (e) => {
+                        setTimeout(() => {
+                            mouseArea.classList.remove('active');
+                        }, 150);
+                    });
+                }
+                
+                document.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    if (e.deltaY > 0) {
+                        this.nextMatch();
+                    } else {
+                        this.prevMatch();
+                    }
+                }, { passive: false });
+                
+                document.addEventListener('mousedown', (e) => {
+                    if (e.button === 1) {
+                        e.preventDefault();
+                        this.selectCurrentMatch();
+                    }
+                }, { passive: false });
+            }
+
+            focusMessageInput() {
+                const messageInput = document.getElementById('message-input');
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            }
+
+            updateStatus(message) {
+                const statusDisplay = document.getElementById('status-display');
+                if (statusDisplay) {
+                    statusDisplay.value = message;
+                    statusDisplay.classList.remove('loading');
+                }
+                console.log('Status: ' + message);
+            }
+
+            handleMessageInput(e) {
+                this.currentMessage = e.target.value;
+                this.updateTranslatedMessageFromInput();
+                this.checkForAcronymExpansion();
+            }
+
+            updateTranslatedMessageFromInput() {
+                if (this.selectedLanguage === 'en') {
+                    this.currentTranslatedMessage = this.currentMessage;
+                    return;
+                }
+                this.showFullTranslatedMessage();
+            }
+
+            checkForAcronymExpansion() {
+                const words = this.currentMessage.split(' ');
+                const lastWord = words[words.length - 1];
+                
+                if (lastWord) {
+                    this.findMatches(lastWord);
+                } else {
+                    this.clearMatches();
+                }
+            }
+
+            findMatches(query) {
+                if (!query) {
+                    this.currentMatches = [];
+                    this.currentMatchIndex = 0;
+                    this.displayCurrentMatch();
+                    return;
+                }
+                
+                const queryUpper = query.toUpperCase();
+                
+                // Only check user acronyms for 3+ character queries to preserve core 1-2 char acronyms
+                let userExactMatches = [];
+                if (query.length >= 3) {
+                    userExactMatches = this.userAcronyms.filter(item => 
+                        item.acronym.toUpperCase().startsWith(queryUpper)
+                    );
+                }
+                
+                // Always check main database for all queries
+                const mainMatches = this.dbManager.searchAcronyms(query);
+                
+                // For 3+ char queries, filter out main matches that conflict with user acronyms
+                let filteredMainMatches = mainMatches;
+                if (query.length >= 3) {
+                    const userAcronymNames = new Set(this.userAcronyms.map(item => item.acronym.toUpperCase()));
+                    filteredMainMatches = mainMatches.filter(item => 
+                        !userAcronymNames.has(item.acronym.toUpperCase())
+                    );
+                }
+                
+                // Combine results: user acronyms first (for 3+ chars), then main database
+                this.currentMatches = [...userExactMatches, ...filteredMainMatches];
+                this.currentMatchIndex = 0;
+                this.displayCurrentMatch();
+            }
+
+            clearMatches() {
+                this.currentMatches = [];
+                this.currentMatchIndex = 0;
+                this.displayCurrentMatch();
+                this.showFullTranslatedMessage();
+            }
+
+            displayCurrentMatch() {
+                const acronymDisplay = document.getElementById('acronym-display');
+                if (!acronymDisplay) return;
+
+                if (this.currentMatches.length > 0) {
+                    const match = this.currentMatches[this.currentMatchIndex];
+                    acronymDisplay.value = match.acronym + ': ' + match.meaning + ' (' + (this.currentMatchIndex + 1) + '/' + this.currentMatches.length + ')';
+                    
+                    this.displayTranslation(match);
+                } else {
+                    acronymDisplay.value = '';
+                    this.showFullTranslatedMessage();
+                }
+            }
+
+            nextMatch() {
+                if (this.currentMatches.length > 0) {
+                    this.currentMatchIndex = (this.currentMatchIndex + 1) % this.currentMatches.length;
+                    this.displayCurrentMatch();
+                }
+            }
+
+            prevMatch() {
+                if (this.currentMatches.length > 0) {
+                    this.currentMatchIndex = this.currentMatchIndex === 0 ? 
+                        this.currentMatches.length - 1 : this.currentMatchIndex - 1;
+                    this.displayCurrentMatch();
+                }
+            }
+
+            transferRegularWord(word) {
+                // Auto-convert regular words to user acronyms (3+ chars only)
+                const wordUpper = word.toUpperCase();
+                const wordLower = word.toLowerCase();
+                
+                // Only create user acronyms for 3+ character words to preserve 1-2 char core acronyms
+                if (word.length >= 3) {
+                    // Check if this word already exists as a user acronym
+                    const existingAcronym = this.userAcronyms.find(item => 
+                        item.acronym.toUpperCase() === wordUpper
+                    );
+                    
+                    if (!existingAcronym && this.userAcronyms.length < this.maxUserAcronyms) {
+                        // Create new user acronym: acronym=WORD, meaning=word
+                        this.userAcronyms.push({ 
+                            acronym: wordUpper, 
+                            meaning: wordLower 
+                        });
+                        this.saveUserAcronyms();
+                        console.log('Auto-created user acronym (3+ chars): ' + wordUpper + ' = ' + wordLower);
+                    }
+                }
+                
+                // Add to both messages
+                this.currentMessage = this.currentMessage.trim() + ' ';
+                
+                const translatedWords = this.currentTranslatedMessage.trim() ? 
+                    this.currentTranslatedMessage.trim().split(' ') : [];
+                translatedWords.push(wordLower);
+                this.currentTranslatedMessage = translatedWords.join(' ') + ' ';
+                
+                this.updateMessageInput();
+                this.showFullTranslatedMessage();
+                this.clearMatches();
+                
+                if (word.length >= 3) {
+                    this.updateStatus('Added word as new acronym: ' + wordUpper + ' = ' + wordLower);
+                } else {
+                    this.updateStatus('Added word (1-2 chars preserved for core acronyms): ' + word);
+                }
+            }
+
+            selectCurrentMatch() {
+                if (this.currentMatches.length > 0) {
+                    const match = this.currentMatches[this.currentMatchIndex];
+                    this.expandAcronym(match.acronym, match.meaning);
+                    
+                    if (this.speechMode === 'AUTO') {
+                        setTimeout(() => {
+                            this.speakText(match.meaning);
+                        }, 100);
+                    }
+                } else {
+                    const words = this.currentMessage.split(' ');
+                    const lastWord = words[words.length - 1];
+                    
+                    if (lastWord && lastWord.trim()) {
+                        this.transferRegularWord(lastWord);
+                    } else {
+                        this.updateStatus('No word to select');
+                    }
+                }
+            }
+
+            expandAcronym(acronym, meaning) {
+                const trimmedMessage = this.currentMessage.trim();
+                const words = trimmedMessage.split(' ');
+                
+                if (words.length > 0) {
+                    words[words.length - 1] = meaning;
+                }
+                
+                this.currentMessage = words.join(' ') + ' ';
+                this.updateMessageInput();
+                
+                this.expandTranslatedMessage(acronym, meaning);
+                
+                this.showFullTranslatedMessage();
+                this.clearMatches();
+            }
+
+            expandTranslatedMessage(acronym, meaning) {
+                if (this.selectedLanguage === 'en') {
+                    this.currentTranslatedMessage = this.currentMessage;
+                    return;
+                }
+
+                const matchingAcronym = this.currentMatches.find(match => 
+                    match.acronym.toUpperCase() === acronym.toUpperCase()
+                );
+
+                let translatedMeaning = meaning;
+
+                if (matchingAcronym) {
+                    const translation = this.dbManager.getTranslation(matchingAcronym, this.selectedLanguage);
+                    if (translation) {
+                        translatedMeaning = translation;
+                    }
+                }
+
+                const trimmedTranslatedMessage = this.currentTranslatedMessage.trim();
+                const translatedWords = trimmedTranslatedMessage ? trimmedTranslatedMessage.split(' ') : [];
+                
+                translatedWords.push(translatedMeaning);
+                
+                this.currentTranslatedMessage = translatedWords.join(' ') + ' ';
+            }
+
+            updateMessageInput() {
+                const messageInput = document.getElementById('message-input');
+                if (messageInput) {
+                    messageInput.value = this.currentMessage;
+                }
+            }
+
+            speakEnglish() {
+                const messageInput = document.getElementById('message-input');
+                
+                if (!messageInput || !messageInput.value.trim()) {
+                    this.updateStatus('No English text to speak');
+                    return;
+                }
+                
+                if (this.speechMode === 'OFF') {
+                    this.updateStatus('Speech is OFF - cannot speak English');
+                    return;
+                }
+                
+                this.speakText(messageInput.value, 'en');
+                this.updateStatus('Speaking English text');
+            }
+
+            speakTranslation() {
+                const translationInput = document.getElementById('translation-input');
+                
+                if (!translationInput || !translationInput.value.trim()) {
+                    this.updateStatus('No translation to speak');
+                    return;
+                }
+                
+                if (translationInput.value === 'No translation available') {
+                    this.updateStatus('No translation available to speak');
+                    return;
+                }
+                
+                if (this.speechMode === 'OFF') {
+                    this.updateStatus('Speech is OFF - cannot speak translation');
+                    return;
+                }
+                
+                this.speakText(translationInput.value, this.selectedLanguage);
+                
+                const langName = this.getLanguageName(this.selectedLanguage);
+                if (this.isLookingUp) {
+                    this.updateStatus('Speaking ' + langName + ' acronym translation');
+                } else {
+                    this.updateStatus('Speaking full ' + langName + ' message');
+                }
+            }
+
+            getLanguageName(code) {
+                const names = {
+                    'en': 'English',
+                    'es-es': 'Español (España)',
+                    'es-mx': 'Español (América)',
+                    'pt': 'Português',
+                    'fr': 'Français',
+                    'it': 'Italiano',
+                    'de': 'Deutsch'
+                };
+                return names[code] || code.toUpperCase();
+            }
+
+            handleKeyDown(e) {
+                if (e.key === ' ') {
+                    const words = this.currentMessage.split(' ');
+                    const lastWord = words[words.length - 1];
+                    
+                    if (lastWord && lastWord.trim()) {
+                        e.preventDefault();
+                        if (this.currentMatches.length > 0) {
+                            this.selectCurrentMatch();
+                        } else {
+                            this.transferRegularWord(lastWord);
+                        }
+                        return;
+                    }
+                }
+            }
+
+            handleGlobalKeyDown(e) {
+                // Check if user is typing in user acronym form inputs
+                const activeElement = document.activeElement;
+                const isUserFormInput = activeElement && (
+                    activeElement.id === 'new-acronym' || 
+                    activeElement.id === 'new-meaning' ||
+                    activeElement.id === 'filter-user-acronyms'
+                );
+                
+                // If typing in user form, only handle specific keys and don't steal focus
+                if (isUserFormInput) {
+                    // Only handle Enter key in user form inputs
+                    if (e.key === 'Enter' && (activeElement.id === 'new-acronym' || activeElement.id === 'new-meaning')) {
+                        e.preventDefault();
+                        this.addUserAcronym();
+                    }
+                    // Let all other keys pass through normally for text input
+                    return;
+                }
+
+                const shortcutKeys = ['[', ']', '`', '-', '=', '/', '\\', '~', '|', '?'];
+                if (shortcutKeys.includes(e.key)) {
+                    e.preventDefault();
+                }
+
+                switch (e.key) {
+                    case '[':
+                        this.clearLastWord();
+                        break;
+                    case ']':
+                        this.toggleSpeech();
+                        break;
+                    case '`':
+                        this.clearMessage();
+                        break;
+                    case '-':
+                        this.volumeDown();
+                        break;
+                    case '=':
+                        this.volumeUp();
+                        break;
+                    case '/':
+                        this.speak();
+                        break;
+                    case '\\':
+                        this.copyToClipboard();
+                        break;
+                    case '~':
+                        this.cycleVoice();
+                        break;
+                    case '|':
+                        this.cycleTone();
+                        break;
+                    case '?':
+                        this.lookupWord();
+                        break;
+                    case 'ArrowLeft':
+                        this.prevMatch();
+                        break;
+                    case 'ArrowRight':
+                        this.nextMatch();
+                        break;
+                    case 'Enter':
+                        if (this.currentMatches.length > 0) {
+                            this.selectCurrentMatch();
+                        }
+                        break;
+                }
+                
+                // Only focus message input if not in user form
+                this.focusMessageInput();
+            }
+
+            handleButtonClick(e) {
+                const buttonId = e.currentTarget.id;
+                console.log('Button clicked: ' + buttonId);
+                
+                switch (buttonId) {
+                    case 'speak-btn':
+                        this.speak();
+                        break;
+                    case 'test-btn':
+                        this.testSpeech();
+                        break;
+                    case 'dit-btn':
+                        this.addMorse('.');
+                        break;
+                    case 'dah-btn':
+                        this.addMorse('-');
+                        break;
+                    case 'clear-btn':
+                        this.clearMessage();
+                        break;
+                    case 'backspace-btn':
+                        this.backspace();
+                        break;
+                    case 'space-btn':
+                        const words = this.currentMessage.split(' ');
+                        const lastWord = words[words.length - 1];
+                        
+                        if (lastWord && lastWord.trim()) {
+                            if (this.currentMatches.length > 0) {
+                                this.selectCurrentMatch();
+                            } else {
+                                this.transferRegularWord(lastWord);
+                            }
+                        } else {
+                            this.addSpace();
+                        }
+                        break;
+                    case 'clear-last-word-btn':
+                        this.clearLastWord();
+                        break;
+                    case 'copy-btn':
+                        this.copyToClipboard();
+                        break;
+                    case 'volume-up-btn':
+                        this.volumeUp();
+                        break;
+                    case 'volume-down-btn':
+                        this.volumeDown();
+                        break;
+                    case 'voice-btn':
+                        this.cycleVoice();
+                        break;
+                    case 'speech-mode-btn':
+                        this.toggleSpeech();
+                        break;
+                    case 'tone-btn':
+                        this.cycleTone();
+                        break;
+                    case 'manual-btn':
+                        this.showManual();
+                        break;
+                    case 'close-manual':
+                        this.hideManual();
+                        break;
+                    case 'prev-acronym':
+                        this.prevMatch();
+                        break;
+                    case 'next-acronym':
+                        this.nextMatch();
+                        break;
+                    case 'select-acronym':
+                        this.selectCurrentMatch();
+                        break;
+                    case 'lookup-word':
+                        this.lookupWord();
+                        break;
+                    case 'user-acronyms-btn':
+                        this.showUserAcronyms();
+                        break;
+                    case 'spare-btn':
+                        this.showSpare();
+                        break;
+                    case 'close-user-acronyms':
+                        this.hideUserAcronyms();
+                        break;
+                    case 'add-user-acronym':
+                        this.addUserAcronym();
+                        break;
+                    case 'export-user-acronyms':
+                        this.exportUserAcronyms();
+                        break;
+                    case 'import-user-acronyms':
+                        this.importUserAcronyms();
+                        break;
+                    case 'speak-translation-btn':
+                        this.speakTranslation();
+                        break;
+                    case 'speak-english-btn':
+                        this.speakEnglish();
+                        break;
+                }
+                
+                this.focusMessageInput();
+            }
+
+            addMorse(symbol) {
+                this.morseCode += symbol;
+                this.updateMorseDisplay();
+                this.playTone(symbol === '.' ? 120 : 370);
+                
+                if (this.morseTimeout) {
+                    clearTimeout(this.morseTimeout);
+                }
+                
+                this.morseTimeout = setTimeout(() => {
+                    this.processMorseCode();
+                }, 1200);
+            }
+
+            updateMorseDisplay() {
+                const morseCodeEl = document.getElementById('morse-code');
+                const morseCharEl = document.getElementById('morse-char');
+                
+                if (morseCodeEl) {
+                    morseCodeEl.value = this.morseCode;
+                }
+                
+                if (morseCharEl) {
+                    const char = this.morseMap[this.morseCode] || '';
+                    morseCharEl.value = char;
+                }
+            }
+
+            processMorseCode() {
+                if (this.morseCode) {
+                    if (this.handleMorseCommand(this.morseCode)) {
+                        this.morseCode = '';
+                        this.updateMorseDisplay();
+                        if (this.morseTimeout) {
+                            clearTimeout(this.morseTimeout);
+                            this.morseTimeout = null;
+                        }
+                        return;
+                    }
+                    
+                    if (this.morseMap[this.morseCode]) {
+                        const char = this.morseMap[this.morseCode];
+                        this.currentMessage += char;
+                        this.updateMessageInput();
+                        this.checkForAcronymExpansion();
+                    }
+                }
+                
+                this.morseCode = '';
+                this.updateMorseDisplay();
+                
+                if (this.morseTimeout) {
+                    clearTimeout(this.morseTimeout);
+                    this.morseTimeout = null;
+                }
+            }
+
+            handleMorseCommand(morseCode) {
+                const morseCommands = {
+                    '..-.-.': () => { this.clearMessage(); this.updateStatus('Morse: Message cleared (ur)'); },
+                    '.-.-.': () => { this.clearLastWord(); this.updateStatus('Morse: Last word cleared (ar)'); },
+                    '.-.-': () => { this.backspace(); this.updateStatus('Morse: Backspace (aa)'); },
+                    '...-...': () => { 
+                        const words = this.currentMessage.split(' ');
+                        const lastWord = words[words.length - 1];
+                        
+                        if (lastWord && lastWord.trim()) {
+                            if (this.currentMatches.length > 0) {
+                                this.selectCurrentMatch();
+                            } else {
+                                this.transferRegularWord(lastWord);
+                            }
+                        } else {
+                            this.addSpace(); 
+                        }
+                        this.updateStatus('Morse: Space added (sb)'); 
+                    },
+                    '-..-.': () => { this.speak(); this.updateStatus('Morse: Speaking message (dn)'); },
+                    '.--.-': () => { this.copyToClipboard(); this.updateStatus('Morse: Copied (ak)'); },
+                    '-....-': () => { this.volumeDown(); },
+                    '-...-': () => { this.volumeUp(); },
+                    '...-.': () => { this.cycleVoice(); },
+                    '-.--.': () => { this.toggleSpeech(); },
+                    '..--..': () => { this.cycleTone(); },
+                    '..-.--': () => { this.lookupWord(); },
+                    '--.--': () => { this.showManual(); this.updateStatus('Morse: Manual opened (gg)'); },
+                    '..-.-': () => { this.showUserAcronyms(); }
+                };
+                
+                const command = morseCommands[morseCode];
+                if (command) {
+                    console.log('Executing morse command: ' + morseCode);
+                    command();
+                    return true;
+                }
+                
+                return false;
+            }
+
+            playTone(duration = 150) {
+                if (this.toneMode === 'OFF' || !this.audioContext) return;
+                
+                const volumes = { 'LOW': 0.1, 'MED': 0.3, 'HIGH': 0.6 };
+                const volume = volumes[this.toneMode] || 0.1;
+                
+                try {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(600, this.audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.1, this.audioContext.currentTime + duration / 1000);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration / 1000);
+                } catch (e) {
+                    console.warn('Tone playback failed');
+                }
+            }
+
+            speak() {
+                console.log('Speak button pressed');
+                if (this.speechMode === 'OFF') {
+                    this.updateStatus('Speech is OFF - cannot speak');
+                    return;
+                }
+                
+                if (!this.currentMessage.trim()) {
+                    this.updateStatus('No message to speak');
+                    return;
+                }
+                
+                this.speakText(this.currentMessage, 'en');
+            }
+
+            async speakText(text, language = null) {
+                if (this.speechMode === 'OFF' || !text.trim()) {
+                    console.log('Speech disabled or no text');
+                    return;
+                }
+                
+                const targetLanguage = language || this.selectedLanguage;
+                console.log('Speaking: "' + text + '" in language: ' + targetLanguage);
+                
+                // Cancel any existing speech and wait a moment
+                speechSynthesis.cancel();
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                // Check if speech synthesis is still speaking
+                if (speechSynthesis.speaking) {
+                    console.log('Speech synthesis still busy, waiting...');
+                    speechSynthesis.cancel();
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                try {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.volume = this.volume;
+                    utterance.rate = 0.6;
+                    utterance.pitch = 0.8;
+                    
+                    const langCodes = {
+                        'en': 'en-US',
+                        'es-es': 'es-ES',
+                        'es-mx': 'es-MX',
+                        'pt': 'pt-PT',
+                        'fr': 'fr-FR',
+                        'it': 'it-IT',
+                        'de': 'de-DE'
+                    };
+                    utterance.lang = langCodes[targetLanguage] || 'en-US';
+                    
+                    const voice = this.getVoiceForLanguage(targetLanguage);
+                    if (voice) {
+                        utterance.voice = voice;
+                        console.log('Using voice: ' + voice.name + ' for language: ' + targetLanguage);
+                    } else {
+                        console.warn('No voice available for language: ' + targetLanguage);
+                    }
+                    
+                    utterance.onstart = () => {
+                        console.log('Speech started');
+                        this.updateStatus('Speaking in ' + this.getLanguageName(targetLanguage) + '...');
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log('Speech completed');
+                        this.updateStatus('Speech completed');
+                    };
+                    
+                    utterance.onerror = (e) => {
+                        console.log('Speech error (non-critical):', e.error);
+                        if (e.error !== 'interrupted') {
+                            this.updateStatus('Speech error: ' + e.error);
+                        } else {
+                            this.updateStatus('Speech ready');
+                        }
+                    };
+                    
+                    // Final check before speaking
+                    if (!speechSynthesis.speaking) {
+                        speechSynthesis.speak(utterance);
+                    } else {
+                        console.log('Speech synthesis still busy, skipping this request');
+                    }
+                    
+                } catch (error) {
+                    console.error('Speech synthesis failed:', error);
+                    this.updateStatus('Speech synthesis failed');
+                }
+            }
+
+            getVoiceForLanguage(language) {
+                const genderKey = this.voiceIndex === 0 ? 'male' : 'female';
+                
+                if (this.languageVoices[language] && this.languageVoices[language][genderKey]) {
+                    return this.languageVoices[language][genderKey];
+                }
+                
+                if (this.languageVoices[language]) {
+                    return this.languageVoices[language].male || this.languageVoices[language].female;
+                }
+                
+                if (language === 'es-es' && this.languageVoices['es-mx']) {
+                    console.log(`No ${language} voice found, falling back to es-mx`);
+                    return this.languageVoices['es-mx'][genderKey] || this.languageVoices['es-mx'].male || this.languageVoices['es-mx'].female;
+                }
+                if (language === 'es-mx' && this.languageVoices['es-es']) {
+                    console.log(`No ${language} voice found, falling back to es-es`);
+                    return this.languageVoices['es-es'][genderKey] || this.languageVoices['es-es'].male || this.languageVoices['es-es'].female;
+                }
+                
+                if (language !== 'en' && this.languageVoices['en']) {
+                    console.log(`No ${language} voice found, falling back to English`);
+                    return this.languageVoices['en'][genderKey] || this.languageVoices['en'].male || this.languageVoices['en'].female;
+                }
+                
+                return null;
+            }
+
+            testSpeech() {
+                console.log('Test speech button pressed');
+                if (this.speechMode === 'OFF') {
+                    this.updateStatus('Speech is OFF - cannot test');
+                    return;
+                }
+                
+                const genderText = this.voiceIndex === 0 ? 'male' : 'female';
+                const langName = this.getLanguageName(this.selectedLanguage);
+                const testMessage = 'MyVoice International Edition test. Current voice is ' + genderText + ' ' + langName + '. Volume is ' + Math.round(this.volume * 100) + ' percent.';
+                this.speakText(testMessage, 'en');
+            }
+
+            clearMessage() {
+                this.currentMessage = '';
+                this.currentTranslatedMessage = '';
+                this.updateMessageInput();
+                this.clearMatches();
+                this.updateStatus('Message cleared');
+            }
+
+            backspace() {
+                this.currentMessage = this.currentMessage.slice(0, -1);
+                this.currentTranslatedMessage = this.currentTranslatedMessage.slice(0, -1);
+                
+                this.updateMessageInput();
+                this.showFullTranslatedMessage();
+                this.checkForAcronymExpansion();
+            }
+
+            addSpace() {
+                this.currentMessage += ' ';
+                this.currentTranslatedMessage += ' ';
+                this.updateMessageInput();
+                this.showFullTranslatedMessage();
+                this.clearMatches();
+            }
+
+            clearLastWord() {
+                const words = this.currentMessage.trim().split(' ');
+                words.pop();
+                this.currentMessage = words.join(' ');
+                if (this.currentMessage) this.currentMessage += ' ';
+                
+                const translatedWords = this.currentTranslatedMessage.trim().split(' ');
+                translatedWords.pop();
+                this.currentTranslatedMessage = translatedWords.join(' ');
+                if (this.currentTranslatedMessage) this.currentTranslatedMessage += ' ';
+                
+                this.updateMessageInput();
+                this.checkForAcronymExpansion();
+                this.updateStatus('Last word cleared');
+            }
+
+            async copyToClipboard() {
+                try {
+                    if (navigator.clipboard) {
+                        await navigator.clipboard.writeText(this.currentMessage);
+                        this.updateStatus('Message copied to clipboard');
+                    } else {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = this.currentMessage;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        this.updateStatus('Message copied to clipboard (fallback)');
+                    }
+                } catch (error) {
+                    console.error('Copy failed:', error);
+                    this.updateStatus('Copy to clipboard failed');
+                }
+            }
+
+            volumeUp() {
+                this.volume = Math.min(1.0, this.volume + 0.1);
+                this.updateStatus('Volume: ' + Math.round(this.volume * 100) + '%');
+            }
+
+            volumeDown() {
+                this.volume = Math.max(0.0, this.volume - 0.1);
+                this.updateStatus('Volume: ' + Math.round(this.volume * 100) + '%');
+            }
+
+            cycleVoice() {
+                console.log('Cycling voice...');
+                
+                if (!this.voicesLoaded) {
+                    this.updateStatus('Voices not loaded yet');
+                    return;
+                }
+                
+                this.voiceIndex = this.voiceIndex === 0 ? 1 : 0;
+                this.updateVoiceDisplay();
+                
+                const currentVoice = this.getCurrentVoice();
+                const genderText = this.voiceIndex === 0 ? 'Male' : 'Female';
+                const langName = this.getLanguageName(this.selectedLanguage);
+                const voiceName = currentVoice ? currentVoice.name : 'Default';
+                
+                this.updateStatus('Voice: ' + genderText + ' ' + langName + ' (' + voiceName + ')');
+                
+                if (this.speechMode !== 'OFF') {
+                    setTimeout(() => {
+                        this.speakText(genderText + ' voice selected');
+                    }, 100);
+                }
+            }
+
+            updateVoiceDisplay() {
+                const voiceTypeEl = document.getElementById('voice-type');
+                if (voiceTypeEl) {
+                    const genderText = this.voiceIndex === 0 ? 'Male' : 'Female';
+                    const langName = this.getLanguageName(this.selectedLanguage);
+                    voiceTypeEl.textContent = genderText + ' ' + langName;
+                }
+            }
+
+            toggleSpeech() {
+                console.log('Toggling speech from ' + this.speechMode + '...');
+                
+                // Cancel any current speech when toggling
+                speechSynthesis.cancel();
+                
+                if (this.speechMode === 'ON') {
+                    this.speechMode = 'AUTO';
+                } else if (this.speechMode === 'AUTO') {
+                    this.speechMode = 'OFF';
+                } else {
+                    this.speechMode = 'ON';
+                }
+                
+                const speechModeEl = document.getElementById('speech-mode');
+                if (speechModeEl) {
+                    speechModeEl.textContent = this.speechMode;
+                }
+                
+                this.updateStatus('Speech mode: ' + this.speechMode);
+                
+                console.log('Speech mode is now: ' + this.speechMode);
+            }
+
+            cycleTone() {
+                const modes = ['OFF', 'LOW', 'MED', 'HIGH'];
+                const currentIndex = modes.indexOf(this.toneMode);
+                this.toneMode = modes[(currentIndex + 1) % modes.length];
+                
+                const toneModeEl = document.getElementById('tone-mode');
+                if (toneModeEl) {
+                    toneModeEl.textContent = this.toneMode;
+                }
+                
+                this.updateStatus('Tone: ' + this.toneMode);
+                
+                if (this.toneMode !== 'OFF') {
+                    this.playTone(150);
+                }
+            }
+
+            lookupWord() {
+                const words = this.currentMessage.trim().split(' ');
+                const lastWord = words[words.length - 1];
+                
+                if (lastWord) {
+                    this.findMeaningMatches(lastWord);
+                    this.updateStatus('Looking up meaning: ' + lastWord);
+                } else {
+                    this.updateStatus('No word to lookup');
+                }
+            }
+
+            findMeaningMatches(query) {
+                if (!query) {
+                    this.currentMatches = [];
+                    this.currentMatchIndex = 0;
+                    this.displayCurrentMatch();
+                    return;
+                }
+                
+                const queryUpper = query.toUpperCase();
+                
+                // Only check user acronyms for 3+ character queries to preserve core 1-2 char acronyms
+                let userMeaningMatches = [];
+                if (query.length >= 3) {
+                    userMeaningMatches = this.userAcronyms.filter(item => 
+                        item.meaning.toUpperCase().includes(queryUpper)
+                    );
+                }
+                
+                // Always check main database for all queries
+                const mainMeaningMatches = this.dbManager.getAllAcronyms().filter(item => 
+                    item.meaning.toUpperCase().includes(queryUpper)
+                );
+                
+                // For 3+ char queries, filter out main matches that conflict with user acronyms
+                let filteredMainMatches = mainMeaningMatches;
+                if (query.length >= 3) {
+                    const userAcronymNames = new Set(this.userAcronyms.map(item => item.acronym.toUpperCase()));
+                    filteredMainMatches = mainMeaningMatches.filter(item => 
+                        !userAcronymNames.has(item.acronym.toUpperCase())
+                    );
+                }
+                
+                // Combine results: user acronyms first (for 3+ chars), then main database
+                this.currentMatches = [...userMeaningMatches, ...filteredMainMatches];
+                this.currentMatchIndex = 0;
+                this.displayCurrentMatch();
+            }
+
+            showManual() {
+                const modal = document.getElementById('manual-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }
+
+            hideManual() {
+                const modal = document.getElementById('manual-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            }
+
+            showSpare() {
+                this.updateStatus('Spare button - Available for future feature!');
+            }
+
+            loadUserAcronyms() {
+                try {
+                    const stored = localStorage.getItem('myvoice-user-acronyms');
+                    if (stored) {
+                        const data = JSON.parse(stored);
+                        this.userAcronyms = data.acronyms || [];
+                        
+                        // Migrate old za-zz templates to zza-zzz
+                        let migrationNeeded = false;
+                        this.userAcronyms.forEach(item => {
+                            if (item.acronym.length === 2 && item.acronym.toLowerCase().startsWith('z') && 
+                                item.meaning.includes('user ')) {
+                                // Migrate za -> zza, zb -> zzb, etc.
+                                item.acronym = 'z' + item.acronym;
+                                migrationNeeded = true;
+                                console.log('Migrated template:', item.acronym);
+                            }
+                        });
+                        
+                        // Check if zza-zzz templates exist, if not add them
+                        const hasZZTemplates = this.userAcronyms.some(item => 
+                            item.acronym.toLowerCase().startsWith('zz') && item.acronym.length === 3
+                        );
+                        
+                        if (!hasZZTemplates) {
+                            const zzTemplates = this.getDefaultUserAcronyms();
+                            this.userAcronyms = [...zzTemplates, ...this.userAcronyms];
+                            migrationNeeded = true;
+                            console.log('Added missing zz-templates to existing user acronyms');
+                        }
+                        
+                        if (migrationNeeded) {
+                            this.saveUserAcronyms();
+                            console.log('Migration completed and saved');
+                        }
+                        
+                        console.log('Loaded ' + this.userAcronyms.length + ' user acronyms from storage');
+                    } else {
+                        // First time user - add default 'zz' templates
+                        this.userAcronyms = this.getDefaultUserAcronyms();
+                        this.saveUserAcronyms();
+                        console.log('First time user - loaded ' + this.userAcronyms.length + ' default templates');
+                    }
+                } catch (error) {
+                    console.warn('Could not load user acronyms from storage:', error);
+                    this.userAcronyms = this.getDefaultUserAcronyms();
+                    this.saveUserAcronyms();
+                }
+            }
+
+            getDefaultUserAcronyms() {
+                return [
+                    { acronym: 'zza', meaning: 'user address' },
+                    { acronym: 'zzb', meaning: 'reserved for user use' },
+                    { acronym: 'zzc', meaning: 'user car' },
+                    { acronym: 'zzd', meaning: 'user drugstore' },
+                    { acronym: 'zze', meaning: 'user email address' },
+                    { acronym: 'zzf', meaning: 'user first name' },
+                    { acronym: 'zzg', meaning: 'reserved for user use' },
+                    { acronym: 'zzh', meaning: 'user hobbies' },
+                    { acronym: 'zzi', meaning: 'reserved for user use' },
+                    { acronym: 'zzj', meaning: 'user job' },
+                    { acronym: 'zzk', meaning: 'reserved for user use' },
+                    { acronym: 'zzl', meaning: 'user last name' },
+                    { acronym: 'zzm', meaning: 'reserved for user use' },
+                    { acronym: 'zzn', meaning: 'user full name' },
+                    { acronym: 'zzo', meaning: 'reserved for user use' },
+                    { acronym: 'zzp', meaning: 'user prescriptions' },
+                    { acronym: 'zzq', meaning: 'reserved for user use' },
+                    { acronym: 'zzr', meaning: 'reserved for user use' },
+                    { acronym: 'zzs', meaning: 'user schooling' },
+                    { acronym: 'zzt', meaning: 'reserved for user use' },
+                    { acronym: 'zzu', meaning: 'reserved for user use' },
+                    { acronym: 'zzv', meaning: 'reserved for user use' },
+                    { acronym: 'zzw', meaning: 'reserved for user use' },
+                    { acronym: 'zzx', meaning: 'reserved for user use' },
+                    { acronym: 'zzy', meaning: 'reserved for user use' },
+                    { acronym: 'zzz', meaning: 'reserved for user use' }
+                ];
+            }
+
+            saveUserAcronyms() {
+                try {
+                    const data = {
+                        acronyms: this.userAcronyms,
+                        lastSaved: new Date().toISOString()
+                    };
+                    localStorage.setItem('myvoice-user-acronyms', JSON.stringify(data));
+                    console.log('Saved ' + this.userAcronyms.length + ' user acronyms to storage');
+                } catch (error) {
+                    console.warn('Could not save user acronyms to storage:', error);
+                }
+            }
+
+            showUserAcronyms() {
+                const modal = document.getElementById('user-acronyms-modal');
+                if (modal) {
+                    console.log('Opening user acronyms modal with', this.userAcronyms.length, 'acronyms');
+                    modal.classList.remove('hidden');
+                    this.updateUserAcronymsList();
+                    this.updateUserCount();
+                    
+                    // Clear and prepare form
+                    setTimeout(() => {
+                        this.resetUserForm();
+                    }, 100);
+                }
+            }
+
+            resetUserForm() {
+                const acronymInput = document.getElementById('new-acronym');
+                const meaningInput = document.getElementById('new-meaning');
+                
+                if (acronymInput && meaningInput) {
+                    // Clear values
+                    acronymInput.value = '';
+                    meaningInput.value = '';
+                    
+                    // Force enable - comprehensive approach
+                    [acronymInput, meaningInput].forEach(input => {
+                        // Remove any disabling attributes
+                        input.removeAttribute('readonly');
+                        input.removeAttribute('disabled');
+                        input.readOnly = false;
+                        input.disabled = false;
+                        
+                        // Force enable styles
+                        input.style.pointerEvents = 'auto';
+                        input.style.cursor = 'text';
+                        input.style.background = 'white';
+                        input.style.color = '#333';
+                        input.style.userSelect = 'text';
+                        
+                        // Remove any class that might disable
+                        input.classList.remove('disabled', 'readonly');
+                    });
+                    
+                    // Focus on acronym input
+                    acronymInput.focus();
+                    console.log('User acronym form reset and enabled');
+                }
+            }
+
+            hideUserAcronyms() {
+                const modal = document.getElementById('user-acronyms-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            }
+
+            addUserAcronym() {
+                const acronymInput = document.getElementById('new-acronym');
+                const meaningInput = document.getElementById('new-meaning');
+                
+                if (!acronymInput || !meaningInput) {
+                    console.error('Could not find input elements');
+                    return;
+                }
+                
+                const acronym = acronymInput.value.trim().toLowerCase();
+                const meaning = meaningInput.value.trim().toLowerCase();
+                
+                console.log('Adding acronym:', acronym, '=', meaning);
+                
+                if (!acronym || !meaning) {
+                    this.updateStatus('Please enter both acronym and meaning');
+                    return;
+                }
+                
+                if (this.userAcronyms.length >= this.maxUserAcronyms) {
+                    this.updateStatus('Maximum ' + this.maxUserAcronyms + ' user acronyms reached');
+                    return;
+                }
+                
+                // Check if acronym already exists
+                const existingIndex = this.userAcronyms.findIndex(item => 
+                    item.acronym.toLowerCase() === acronym.toLowerCase()
+                );
+                
+                if (existingIndex >= 0) {
+                    // Update existing acronym
+                    this.userAcronyms[existingIndex].meaning = meaning;
+                    this.updateStatus('Updated: ' + acronym + ' = ' + meaning);
+                } else {
+                    // Add new acronym
+                    this.userAcronyms.push({ acronym, meaning });
+                    this.updateStatus('Added: ' + acronym + ' = ' + meaning);
+                }
+                
+                // Clear the form and reset
+                this.resetUserForm();
+                
+                // Update the display and save
+                this.updateUserAcronymsList();
+                this.updateUserCount();
+                this.saveUserAcronyms();
+                
+                console.log('User acronym saved successfully');
+            }
+
+            deleteUserAcronym(acronym) {
+                const index = this.userAcronyms.findIndex(item => 
+                    item.acronym.toLowerCase() === acronym.toLowerCase()
+                );
+                
+                if (index >= 0) {
+                    this.userAcronyms.splice(index, 1);
+                    this.updateUserAcronymsList();
+                    this.updateUserCount();
+                    this.saveUserAcronyms();
+                    this.updateStatus('Deleted: ' + acronym);
+                }
+            }
+
+            editUserAcronym(acronym) {
+                console.log('Editing acronym:', acronym);
+                
+                const item = this.userAcronyms.find(item => 
+                    item.acronym.toLowerCase() === acronym.toLowerCase()
+                );
+                
+                if (item) {
+                    console.log('Found item to edit:', item);
+                    const acronymInput = document.getElementById('new-acronym');
+                    const meaningInput = document.getElementById('new-meaning');
+                    
+                    if (acronymInput && meaningInput) {
+                        // Reset form first to ensure it's fully enabled
+                        this.resetUserForm();
+                        
+                        // Then set the values
+                        setTimeout(() => {
+                            acronymInput.value = item.acronym;
+                            meaningInput.value = item.meaning;
+                            
+                            // Focus on meaning field for editing
+                            meaningInput.focus();
+                            meaningInput.setSelectionRange(0, meaningInput.value.length);
+                            
+                            console.log('Edit form populated and ready for editing');
+                        }, 50);
+                        
+                        this.updateStatus('Editing: ' + item.acronym + ' - modify meaning and click Add');
+                    } else {
+                        console.error('Could not find form inputs');
+                    }
+                } else {
+                    console.error('Could not find acronym to edit:', acronym);
+                }
+            }
+
+            updateUserAcronymsList() {
+                const listContainer = document.getElementById('user-acronyms-list');
+                if (!listContainer) return;
+                
+                const filterValue = document.getElementById('filter-user-acronyms')?.value.toLowerCase() || '';
+                
+                this.filteredUserAcronyms = this.userAcronyms.filter(item =>
+                    item.acronym.toLowerCase().includes(filterValue) ||
+                    item.meaning.toLowerCase().includes(filterValue)
+                );
+                
+                console.log('Displaying', this.filteredUserAcronyms.length, 'filtered acronyms out of', this.userAcronyms.length, 'total');
+                
+                listContainer.innerHTML = '';
+                
+                if (this.filteredUserAcronyms.length === 0) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'user-empty-state';
+                    emptyDiv.textContent = filterValue ? 'No acronyms found' : 'Use templates above or type words to auto-create acronyms!';
+                    listContainer.appendChild(emptyDiv);
+                    return;
+                }
+                
+                this.filteredUserAcronyms.forEach((item, index) => {
+                    console.log('Creating list item for:', item.acronym, '=', item.meaning);
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'user-list-item';
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'user-list-content';
+                    
+                    const acronymSpan = document.createElement('span');
+                    acronymSpan.style.color = '#2196F3';
+                    acronymSpan.style.fontWeight = 'normal';
+                    acronymSpan.textContent = item.acronym;
+                    
+                    contentDiv.appendChild(acronymSpan);
+                    contentDiv.appendChild(document.createTextNode(': ' + item.meaning));
+                    
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = 'user-list-buttons';
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'user-btn-edit';
+                    editBtn.textContent = 'Edit';
+                    editBtn.addEventListener('click', () => {
+                        console.log('Edit button clicked for:', item.acronym);
+                        this.editUserAcronym(item.acronym);
+                    });
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'user-btn-delete';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.addEventListener('click', () => {
+                        console.log('Delete button clicked for:', item.acronym);
+                        this.deleteUserAcronym(item.acronym);
+                    });
+                    
+                    buttonsDiv.appendChild(editBtn);
+                    buttonsDiv.appendChild(deleteBtn);
+                    
+                    itemDiv.appendChild(contentDiv);
+                    itemDiv.appendChild(buttonsDiv);
+                    
+                    listContainer.appendChild(itemDiv);
+                });
+            }
+
+            updateUserCount() {
+                const countEl = document.getElementById('user-count');
+                if (countEl) {
+                    countEl.textContent = '(' + this.userAcronyms.length + '/' + this.maxUserAcronyms + ')';
+                }
+            }
+
+            filterUserAcronyms(filterValue) {
+                this.updateUserAcronymsList();
+            }
+
+            exportUserAcronyms() {
+                if (this.userAcronyms.length === 0) {
+                    this.updateStatus('No user acronyms to export');
+                    return;
+                }
+                
+                const data = {
+                    metadata: {
+                        exportDate: new Date().toISOString(),
+                        count: this.userAcronyms.length,
+                        version: '2.0'
+                    },
+                    acronyms: this.userAcronyms
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'myvoice-user-acronyms-' + new Date().toISOString().split('T')[0] + '.json';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                this.updateStatus('Exported ' + this.userAcronyms.length + ' acronyms');
+            }
+
+            importUserAcronyms() {
+                const fileInput = document.getElementById('import-file');
+                if (fileInput) {
+                    fileInput.click();
+                }
+            }
+
+            handleImportFile(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        const importedAcronyms = data.acronyms || data;
+                        
+                        if (!Array.isArray(importedAcronyms)) {
+                            throw new Error('Invalid file format');
+                        }
+                        
+                        let imported = 0;
+                        let updated = 0;
+                        
+                        importedAcronyms.forEach(item => {
+                            if (item.acronym && item.meaning) {
+                                if (this.userAcronyms.length + imported < this.maxUserAcronyms) {
+                                    const existingIndex = this.userAcronyms.findIndex(existing => 
+                                        existing.acronym.toLowerCase() === item.acronym.toLowerCase()
+                                    );
+                                    
+                                    if (existingIndex >= 0) {
+                                        this.userAcronyms[existingIndex].meaning = item.meaning.toLowerCase();
+                                        updated++;
+                                    } else {
+                                        this.userAcronyms.push({
+                                            acronym: item.acronym.toLowerCase(),
+                                            meaning: item.meaning.toLowerCase()
+                                        });
+                                        imported++;
+                                    }
+                                }
+                            }
+                        });
+                        
+                        this.updateUserAcronymsList();
+                        this.updateUserCount();
+                        this.saveUserAcronyms();
+                        this.updateStatus('Import complete: ' + imported + ' added, ' + updated + ' updated');
+                        
+                    } catch (error) {
+                        this.updateStatus('Import failed: Invalid file format');
+                        console.error('Import error:', error);
+                    }
+                    
+                    event.target.value = '';
+                };
+                
+                reader.readAsText(file);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('DOM ready, initializing app...');
+            app = new MyVoiceInternationalApp();
+            
+            console.log('MyVoice International Edition ready');
+        });
+
+        window.app = app;
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    if (confirm('New version available! Reload to update?')) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Handle install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('Install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show custom install button or banner if desired
+            showInstallBanner();
+        });
+
+        function showInstallBanner() {
+            // You can add a custom install banner here
+            console.log('App can be installed');
+            if (app) {
+                app.updateStatus('MyVoice IE can be installed as an app!');
+            }
+        }
+
+        // Handle successful installation
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('MyVoice IE successfully installed!');
+            if (app) {
+                app.updateStatus('MyVoice IE successfully installed as PWA!');
+            }
+        });
+
+        // Manual install trigger (you can add a button for this)
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((result) => {
+                    if (result.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                        if (app) {
+                            app.updateStatus('Installing MyVoice IE as PWA...');
+                        }
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
